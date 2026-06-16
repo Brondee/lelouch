@@ -9,6 +9,8 @@ import (
 )
 
 func TestMatchesPrice(t *testing.T) {
+	t.Parallel()
+
 	matchesPriceTests := []struct {
 		name    string
 		listing domain.Listing
@@ -52,19 +54,23 @@ func TestMatchesPrice(t *testing.T) {
 	}
 
 	for _, tt := range matchesPriceTests {
-		got, err := MatchesPrice(tt.listing, tt.rule)
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := MatchesPrice(tt.listing, tt.rule)
 
-		if got != tt.want {
-			t.Errorf("got %v want %v", got, tt.want)
-		}
+			if got != tt.want {
+				t.Errorf("got %v want %v", got, tt.want)
+			}
 
-		if !errors.Is(err, tt.wantErr) {
-			t.Fatalf("got error %v, want %v", err, tt.wantErr)
-		}
+			if !errors.Is(err, tt.wantErr) {
+				t.Fatalf("got error %v, want %v", err, tt.wantErr)
+			}
+		})
 	}
 }
 
 func TestMatchesPlatform(t *testing.T) {
+	t.Parallel()
+
 	matchesPlatformTests := []struct {
 		name    string
 		listing domain.Listing
@@ -116,6 +122,8 @@ func TestMatchesPlatform(t *testing.T) {
 }
 
 func TestMatchesSize(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name    string
 		listing domain.Listing
@@ -166,6 +174,8 @@ func TestMatchesSize(t *testing.T) {
 }
 
 func TestMatchesBrand(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name    string
 		listing domain.Listing
@@ -216,6 +226,8 @@ func TestMatchesBrand(t *testing.T) {
 }
 
 func TestMatchesKeywords(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name    string
 		listing domain.Listing
@@ -266,6 +278,8 @@ func TestMatchesKeywords(t *testing.T) {
 }
 
 func TestMatches(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name      string
 		listing   domain.Listing

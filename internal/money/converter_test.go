@@ -7,6 +7,8 @@ import (
 )
 
 func TestToUSD(t *testing.T) {
+	t.Parallel()
+
 	toUSDTests := []struct {
 		name    string
 		listing domain.Listing
@@ -33,14 +35,17 @@ func TestToUSD(t *testing.T) {
 	}
 
 	for _, tt := range toUSDTests {
-		got, err := ToUSD(tt.listing.Price, tt.listing.Currency)
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ToUSD(tt.listing.Price, tt.listing.Currency)
 
-		if got != tt.want {
-			t.Errorf("got %v want %v", got, tt.want)
-		}
+			if got != tt.want {
+				t.Errorf("got %v want %v", got, tt.want)
+			}
 
-		if err != tt.wantErr {
-			t.Fatalf("got error %v, want %v", err, tt.wantErr)
-		}
+			if err != tt.wantErr {
+				t.Fatalf("got error %v, want %v", err, tt.wantErr)
+			}
+		})
+
 	}
 }

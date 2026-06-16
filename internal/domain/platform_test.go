@@ -3,6 +3,8 @@ package domain
 import "testing"
 
 func TestPlatformValidate(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name     string
 		platform Platform
