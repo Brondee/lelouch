@@ -9,6 +9,10 @@ import (
 )
 
 func MatchesPrice(listing domain.Listing, rule domain.WatchRule) (bool, error) {
+	if rule.MaxPrice == 0 {
+		return true, nil
+	}
+
 	curPriceUsd, err := money.ToUSD(listing.Price, listing.Currency)
 
 	if err != nil {
@@ -25,6 +29,10 @@ func MatchesPrice(listing domain.Listing, rule domain.WatchRule) (bool, error) {
 }
 
 func MatchesPlatform(listing domain.Listing, rule domain.WatchRule) (bool, error) {
+	if rule.Platform == "" {
+		return true, nil
+	}
+
 	err := listing.Platform.Validate()
 	if err != nil {
 		return false, fmt.Errorf("listing platform: %w", err)

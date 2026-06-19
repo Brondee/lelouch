@@ -31,6 +31,12 @@ func TestMatchesPrice(t *testing.T) {
 			want:    false,
 		},
 		{
+			name:    "returns true when rule max price is empty",
+			listing: domain.Listing{Price: 50, Currency: domain.USD},
+			rule:    domain.WatchRule{},
+			want:    true,
+		},
+		{
 			name:    "returns error when listing currency is unknown",
 			listing: domain.Listing{Price: 50, Currency: "HUI"},
 			rule:    domain.WatchRule{MaxPrice: 100, Currency: domain.USD},
@@ -89,6 +95,12 @@ func TestMatchesPlatform(t *testing.T) {
 			listing: domain.Listing{Platform: domain.PlatformVinted},
 			rule:    domain.WatchRule{Platform: domain.PlatformMercari},
 			want:    false,
+		},
+		{
+			name:    "returns true when rule platfrom is empty",
+			listing: domain.Listing{Platform: domain.PlatformVinted},
+			rule:    domain.WatchRule{},
+			want:    true,
 		},
 		{
 			name:    "returns error when trying to match unknown listing platform",
