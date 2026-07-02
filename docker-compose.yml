@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: lelouch_db
+      POSTGRES_USER: lelouch
+      POSTGRES_PASSWORD: 12345
+    volumes:
+      - lelouch-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lelouch -d lelouch_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  lelouch-data:

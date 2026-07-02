@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/joho/godotenv"
+
+	"github.com/Brondee/lelouch/internal/database"
 	"github.com/Brondee/lelouch/internal/domain"
 	"github.com/Brondee/lelouch/internal/parser/fake"
 	"github.com/Brondee/lelouch/internal/service"
@@ -11,6 +16,22 @@ import (
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(".env file not found")
+	}
+
+	ctx := context.Background()
+
+	db, err := database.ConnectDB(ctx, os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	defer db.Close()
+
+	fmt.Println("database connection successful")
+
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
