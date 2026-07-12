@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/Brondee/lelouch/internal/domain"
@@ -14,7 +15,7 @@ type ScanService struct {
 	Parser     parser.Parser
 }
 
-func (s *ScanService) Scan(rule domain.WatchRule) ([]domain.Listing, error) {
+func (s *ScanService) Scan(ctx context.Context, rule domain.WatchRule) ([]domain.Listing, error) {
 	parsedListings, err := s.Parser.Search()
 	if err != nil {
 		return nil, fmt.Errorf("parser search: %w", err)
@@ -29,7 +30,7 @@ func (s *ScanService) Scan(rule domain.WatchRule) ([]domain.Listing, error) {
 		}
 
 		if ok {
-			isNew, err := s.Repository.SaveIfNew(listing)
+			isNew, err := s.Repository.SaveIfNew(ctx, listing)
 			if err != nil {
 				return nil, fmt.Errorf("repository save if new: %w", err)
 			}

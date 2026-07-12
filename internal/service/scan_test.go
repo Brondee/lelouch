@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -74,7 +75,9 @@ func TestScanService(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			scanService := ScanService{Repository: tt.storage, Parser: tt.parser}
 
-			got, err := scanService.Scan(tt.rule)
+			ctx := context.Background()
+
+			got, err := scanService.Scan(ctx, tt.rule)
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %v, want %v", got, tt.want)

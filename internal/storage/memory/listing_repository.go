@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/Brondee/lelouch/internal/domain"
@@ -10,7 +11,7 @@ type ListingRepository struct {
 	Listings []domain.Listing
 }
 
-func (l *ListingRepository) SaveIfNew(listing domain.Listing) (bool, error) {
+func (l *ListingRepository) SaveIfNew(ctx context.Context, listing domain.Listing) (bool, error) {
 	if listing.Title == "" {
 		return false, fmt.Errorf("listing is empty")
 	}

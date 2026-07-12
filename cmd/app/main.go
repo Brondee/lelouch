@@ -13,7 +13,7 @@ import (
 	"github.com/Brondee/lelouch/internal/domain"
 	"github.com/Brondee/lelouch/internal/parser/fake"
 	"github.com/Brondee/lelouch/internal/service"
-	"github.com/Brondee/lelouch/internal/storage"
+	"github.com/Brondee/lelouch/internal/storage/postgres"
 )
 
 func main() {
@@ -41,13 +41,13 @@ func main() {
 
 func run(ctx context.Context, dbpool *pgxpool.Pool) error {
 	parser := &fake.FakeParser{Listings: fakeListings}
-	storage := &storage.PostgresRepository{Context: ctx, DB: dbpool}
+	storage := &postgres.ListingRepository{DB: dbpool}
 
 	scanService := service.ScanService{Repository: storage, Parser: parser}
 
 	ruleByMaxPrice := domain.WatchRule{MaxPrice: 35, Currency: domain.USD}
 
-	listings, err := scanService.Scan(ruleByMaxPrice)
+	listings, err := scanService.Scan(ctx, ruleByMaxPrice)
 	if err != nil {
 		return fmt.Errorf("scan listings: %w", err)
 	}
