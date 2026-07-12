@@ -6,13 +6,14 @@ import (
 	"log"
 	"os"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 
 	"github.com/Brondee/lelouch/internal/database"
 	"github.com/Brondee/lelouch/internal/domain"
 	"github.com/Brondee/lelouch/internal/parser/fake"
 	"github.com/Brondee/lelouch/internal/service"
-	"github.com/Brondee/lelouch/internal/storage/memory"
+	"github.com/Brondee/lelouch/internal/storage"
 )
 
 func main() {
@@ -32,15 +33,15 @@ func main() {
 
 	fmt.Println("database connection successful")
 
-	if err := run(); err != nil {
+	if err := run(ctx, db); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-func run() error {
+func run(ctx context.Context, dbpool *pgxpool.Pool) error {
 	parser := &fake.FakeParser{Listings: fakeListings}
-	storage := &memory.ListingRepository{}
+	storage := &storage.PostgresRepository{Context: ctx, DB: dbpool}
 
 	scanService := service.ScanService{Repository: storage, Parser: parser}
 
@@ -82,6 +83,18 @@ var fakeListings = []domain.Listing{
 		Size:       "l",
 		Category:   "tshirt",
 		URL:        "https://vinted.de/number-nine-tshirt",
+	},
+	{
+		ID:         "12345",
+		Title:      "oakley long sleeve",
+		Platform:   domain.PlatformVinted,
+		SellerName: "gregori",
+		Brand:      "oakley",
+		Price:      23,
+		Currency:   domain.EUR,
+		Size:       "l",
+		Category:   "long sleeve",
+		URL:        "https://vinted.de/oakley-long-sleeve",
 	},
 	{
 		ID:         "12345",
