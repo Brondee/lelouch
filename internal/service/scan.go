@@ -16,7 +16,7 @@ type ScanService struct {
 }
 
 func (s *ScanService) Scan(ctx context.Context, rule domain.WatchRule) ([]domain.Listing, error) {
-	parsedListings, err := s.Parser.Search()
+	parsedListings, err := s.Parser.Search(ctx, rule)
 	if err != nil {
 		return nil, fmt.Errorf("parser search: %w", err)
 	}
@@ -24,6 +24,7 @@ func (s *ScanService) Scan(ctx context.Context, rule domain.WatchRule) ([]domain
 	var matched []domain.Listing
 
 	for _, listing := range parsedListings {
+		// fmt.Println(listing)
 		ok, err := filter.Matches(listing, rule)
 		if err != nil {
 			return nil, fmt.Errorf("filter matches: %w", err)

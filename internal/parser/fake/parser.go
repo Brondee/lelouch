@@ -1,6 +1,8 @@
 package fake
 
 import (
+	"context"
+
 	"github.com/Brondee/lelouch/internal/domain"
 )
 
@@ -9,7 +11,7 @@ type FakeParser struct {
 	Err      error
 }
 
-func (f *FakeParser) Search() ([]domain.Listing, error) {
+func (f *FakeParser) Search(ctx context.Context, rule domain.WatchRule) ([]domain.Listing, error) {
 	if f.Err != nil {
 		return nil, f.Err
 	}
